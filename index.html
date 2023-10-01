@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ナポリの男たち楽曲のランキングを作ろう！</title>
+    <style>
+        body {
+            background-color: floralwhite;
+        }
+
+        #results {
+            text-align: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        /* 4行ごとに背景色を変化させる（色の濃度を薄くする） */
+        tr:nth-child(4n+1) td {
+            background-color: rgba(221, 160, 221, 0.5); /* plumを薄くした色 */
+        }
+
+        tr:nth-child(4n+2) td {
+            background-color: rgba(240, 230, 140, 0.5); /* khakiを薄くした色 */
+        }
+
+        tr:nth-child(4n+3) td {
+            background-color: rgba(102, 205, 170, 0.5); /* mediumaquamarineを薄くした色 */
+        }
+
+        tr:nth-child(4n+4) td {
+            background-color: rgba(135, 206, 235, 0.5); /* skyblueを薄くした色 */
+        }
+
+        /* th要素の背景色を薄くする */
+        th {
+            background: linear-gradient(to right, rgba(102, 205, 170, 0.5), rgba(255, 250, 250, 0.5), rgba(250, 128, 114, 0.5));
+        }
+
+        #buttonTemp0, #buttonTemp1 {
+            margin: 30px;
+        }
+
+        #start-button {
+            border-radius: 50%; /* 50% で円形になります */
+            width: 200px; /* 幅を調整 */
+            height: 100px; /* 高さを調整 */
+        }
+
+        /* ヘッダー全体のスタイル */
+        .header {
+            text-align: center;
+            background: linear-gradient(to right, mediumaquamarine, snow, salmon);
+            padding: 20px;
+        }
+
+        /* 四角形の箱を定義 */
+        .boxed {
+            border: 2px solid #000; /* 枠線を設定 */
+            padding: 10px; /* 内側の余白を設定 */
+            width: 400px; /* 幅を設定 */
+            margin: 40px auto; /* 中央に配置するためのマージン（縦方向の余白を追加） */
+            background-color: aliceblue;
+        }
+
+        button {
+            text-align: center;
+            display: inline-block;
+            margin: 20px;/* ボタン間の余白を調整 */
+            padding: 30px;  /* ボタンの内側の余白を調整 */
+            font-size: 20px; /* ボタンの文字サイズを調整 */
+        }
+
+        #twitter-share-container {
+        justify-content: center;
+        align-items: center;
+        }
+
+        #twitter-share-button {
+        background: linear-gradient(to right, mediumaquamarine, snow, salmon);
+        padding: 10px 20px; /* パディングを設定してボタンのサイズを調整 */
+        }
+
+        /* selectcontainer内のボタンを中央揃えにする */
+        #selectcontainer {
+            text-align: center;
+        }
+
+        #selectcontainer button {
+            display: block;
+            margin: 10px auto; /* 中央揃えと余白設定 */
+            width: 100%; /* ボタンの幅を100%に設定 */
+        }
+
+        #all-image, #lantah-image, #sugiru-image, #hacchi-image, #shu3-image, #hitsong-image {
+            max-width: 50%; /* 画像の最大幅を設定 */
+            max-height: 50vh; /* 画像の最大高さを設定 */
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="font-size: 50px;">みんな作ろう！！<br>ナポリの男たち楽曲ランキング</br></h1>  
+    </div>
+
+    <div id="intro">
+        <p align="center">ニコニコ動画で無料公開されているチャンネル放送や4人実況,<br> Youtubeの歌倉庫に格納されている楽曲および切り抜き動画から聴くことができる</br>
+            全41曲の中を, あなたの好みの順番にソートします.<br>ソートする楽曲の総数に種類があり, 曲数が多いものは時間がかかります.</br></p>
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+        <div id="start-button-container">
+            <button id="start-button" onclick="startDiagnosis()" style="background: linear-gradient(to right, mediumaquamarine, snow, salmon); padding: 30px 40px; font-size: 20px;">ソート開始</button>
+        </div>
+        <div id="selectcontainer" style="display:none">
+            <h3 align="center">どの楽曲集でソートしますか?</h3>
+            <button id="all-button" style="background: linear-gradient(to right, rgba(102, 205, 170, 0.5), rgba(255, 250, 250, 0.5), rgba(250, 128, 114, 0.5))">全楽曲(41曲)</button>
+            <button id="lantah-button" style="background-color: plum;">蘭たん楽曲集(15曲)</button>
+            <button id="sugiru-button" style="background-color: khaki;">SUGIRU楽曲集(15曲)</button>
+            <button id="hacchi-button" style="background-color: mediumaquamarine;">hacchi楽曲集(15曲)</button>
+            <button id="shu3-button" style="background-color: skyblue;">shu3楽曲集(16曲)</button>
+            <button id="hitsong-button" style="background: linear-gradient(to right, plum, khaki, mediumaquamarine, skyblue)">ヒットソング楽曲(22曲)</button>
+
+        </div>
+        <div id="buttonImageContainer" style="display: none; text-align: center; flex-direction: column; align-items: center;">
+            <div id="buttonContainer">
+                <h3 align="center">どちらの楽曲が好き?</h3>
+                <button id="buttonTemp0" style="background-color: rgba(102, 205, 170, 0.5)"></button>
+                <button id="buttonTemp1" style="background-color: rgba(250, 128, 114, 0.5)"></button>
+            </div>
+            <div id="all">
+                <img id="all-image" src="all.jpg" alt="allの画像">
+            </div>
+            <div id="lantah">
+                <img id="lantah-image" src="lantah.jpeg" alt="lantahの画像">
+            </div>
+            <div id="sugiru">
+                <img id="sugiru-image" src="sugiru.jpeg" alt="sugiruの画像">
+            </div>
+            <div id="hacchi">
+                <img id="hacchi-image" src="hacchi.jpeg" alt="hacchiの画像">
+            </div>
+            <div id="shu3">
+                <img id="shu3-image" src="shu3.jpeg" alt="shu3の画像">
+            </div>
+            <div id="hitsong">
+                <img id="hitsong-image" src="all.jpg" alt="hitsongの画像">  
+            </div>
+        </div>
+    </div>
+    
+       
+    <div id="results" style="display:none;" >
+        <!-- 結果テーブル -->
+        <h2 align="center" style="font-size: 32px;">あなたのナポリの男たち楽曲ランキング</h2>
+        <table id="rankingTable" >
+            <thead>
+                <tr>
+                    <th>順位</th>
+                    <th>楽曲</th>
+                </tr>
+            </thead>
+            <tbody id="rankingBody">
+            </tbody>
+        </table>
+        <div id="twitter-share-container" >
+            <button id="twitter-share-button">ランキングTOP3をツイートする！</button>
+        </div>
+    </div>
+
+    <div id="box" class="boxed" style="display: none;">
+        <p align="center">
+            引用元
+            <br>
+                <cite>
+                    <a href="https://www.youtube.com/@napolimens/featured">
+                        Youtube:ナポリの男たち
+                    </a>
+                </cite>
+            </br>
+            <br>
+                <cite>
+                    <a href="https://www.youtube.com/@user-vn1ne1dr5l">
+                        Youtube:ナポリの男たち切り抜き【公認】
+                    </a>
+                </cite>
+            </br>
+            <br>
+                <cite>
+                    <a href="https://www.nicovideo.jp/user/58413388">
+                        ニコニコ動画:ナポリの男たち
+                    </a>
+                </cite>
+            </br>
+            <br>
+                <cite>
+                    <a href="https://ch.nicovideo.jp/naporich">
+                        ニコニコ動画:ナポリの男たちch
+                    </a>
+                </cite>
+            </br>
+        </p>
+    </div>
+
+    <p id="me" align="right">
+        制作者twitter:<a href="https://twitter.com/karuma_garbage">@karuma_garbage</a>
+    </p>
+
+<script>
+    // 音楽リストの初期化
+    var all_list = [['涙塩分マルゲリータ'], ['好きやねん(さだ民生) '], ['ローション大蛇(さだ民生) '], ['白ニット センター分け(さだ民生)'], ['解放 ～リベレーション～'], ['高槻ワンサ イドラバー '], ['魔法少女ミンキーピンキーの歌 '], ['僕も(わたしも)'], ['老境'], ['A-FLOW'], ['Spicy Addition'], ['あの星を求めて'], ['おじさんの歌'], ['はつ桜'], ['真相 ～janseung～'], ['ウエストスター☆ピーターパン'], ['O,Такацуки'], ['ワン・エイト・ディスコ'], ['CHANGE MY MIND'], ['hacchi likes apples.'], ['ハッチャンサンバ'], ['ティニス'], ['DreamFire'], ['ヌメ乗りジョニー'], ['Dearパパ ～Bad Description～'], ['FIGHT！デバッグ☆シュピキュア'], ['本能デトックス'], ['PARADISE NIGHT'], ['shu3やめへんでの歌'], ['高槻の風のように…'], ['RING-TONE'], ['横浜哀恋慕'], ['ナポ男再結成の歌(仮)'], ['KAKUGARI RAP BATTLE'], ['OH! SUN POWER3'], ['嗚呼、美しきナポンヌ'], ['王の憂い'], ['鳥になりたい'], ['ナポンヌのムスカリ'], ['スリーピングシティ'], ['浪速ナポリ節']];
+    var lantah_list = [['涙塩分マルゲリータ'], ['好きやねん(さだ民生) '], ['ローション大蛇(さだ民生) '], ['白ニット センター分け(さだ民生)'], ['解放 ～リベレーション～'], ['高槻ワンサイドラバー '], ['魔法少女ミンキーピンキーの歌 '], ['僕も(わたしも)'], ['老境'], ['A-FLOW'], ['Spicy Addition'], ['ナポンヌのムスカリ'], ['スリーピングシティ'], ['浪速ナポリ節']];
+    var sugiru_list = [['涙塩分マルゲリータ'], ['A-FLOW'], ['あの星を求めて'], ['おじさんの歌'], ['はつ桜'], ['真相 ～janseung～'], ['ウエストスター☆ピーターパン'], ['O,Такацуки'], ['横浜哀恋慕'], ['ナポ男再結成の歌(仮)'], ['KAKUGARI RAP BATTLE'], ['嗚呼、美しきナポンヌ'], ['ナポンヌのムスカリ']];
+    var hacchi_list = [['涙塩分マルゲリータ'], ['老境'], ['ワン・エイト・ディスコ'], ['CHANGE MY MIND'], ['hacchi likes apples.'], ['ハッチャンサンバ'], ['RING-TONE'], ['横浜哀恋慕'], ['ナポ男再結成の歌(仮)'], ['KAKUGARI RAP BATTLE'], ['OH! SUN POWER3'], ['嗚呼、美しきナポンヌ'], ['鳥になりたい']];
+    var shu3_list = [['涙塩分マルゲリータ'], ['Spicy Addition'], ['あの星を求めて'], ['DreamFire'], ['ヌメ乗りジョニー'], ['Dearパパ ～Bad Description～'], ['FIGHT！デバッグ☆シュピキュア'], ['本能デトックス'], ['PARADISE NIGHT'], ['shu3やめへんでの歌'], ['高槻の風のように…'], ['RING-TONE'], ['KAKUGARI RAP BATTLE'], ['OH! SUN POWER3'], ['嗚呼、美しきナポンヌ'], ['王の憂い']];
+    var hitsong_list = [['老境'], ['A-FLOW'], ['Spicy Addition'], ['はつ桜'], ['真相 ～janseung～'], ['ウエストスター☆ピーターパン'], ['O,Такацуки'], ['ワン・エイト・ディスコ'], ['CHANGE MY MIND'], ['hacchi likes apples.'], ['ハッチャンサンバ'], ['ヌメ乗りジョニー'], ['FIGHT！デバッグ☆シュピキュア'], ['本能デトックス'], ['PARADISE NIGHT'], ['RING-TONE'], ['横浜哀恋慕'], ['KAKUGARI RAP BATTLE'], ['OH! SUN POWER3'], ['スリーピングシティ']];
+    var music_list = [];
+
+
+    // 空のリストを用意
+    var concat_list = [];
+    var urlconcat_list = [];
+    var conclude_list = [];
+    var urlconclude_list = [];
+    
+    // ボタン要素を取得
+    var buttonTemp0 = document.getElementById("buttonTemp0");
+    var buttonTemp1 = document.getElementById("buttonTemp1");
+
+    // selectcontainer内のボタン要素を取得
+    var selectButtons = document.querySelectorAll("#selectcontainer button");
+
+    // 選択されたリストを格納する変数
+    var selectedList = [];
+
+    // ボタンがクリックされたときの処理
+    selectButtons.forEach(function(button, index) {
+        button.addEventListener("click", function() {
+            // 選択したボタンに応じて対応するリストを選択
+            switch (index) {
+                case 0:
+                    selectedList = all_list;
+                    break;
+                case 1:
+                    selectedList = lantah_list;
+                    break;
+                case 2:
+                    selectedList = sugiru_list;
+                    break;
+                case 3:
+                    selectedList = hacchi_list;
+                    break;
+                case 4:
+                    selectedList = shu3_list;
+                    break;
+                case 5:
+                    selectedList = hitsong_list;
+                    break;
+                default:
+                    selectedList = [];
+            }
+
+            // 選択したリストをmusic_listに結合
+            music_list = music_list.concat(selectedList);
+
+            // シャッフルする
+            shuffleArray(music_list);
+
+            // 最初の楽曲リストを取得してボタンに設定
+            temp0 = getNextMusicList();
+            temp1 = getNextMusicList();
+            buttonTemp0.textContent = temp0[0];
+            buttonTemp1.textContent = temp1[0];
+
+            // 選択肢を非表示にし、質問ボタンを表示
+            document.getElementById('selectcontainer').style.display = 'none';
+            document.getElementById('buttonImageContainer').style.display = 'block';
+        });
+    });
+
+    
+
+    //シャッフル関数
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    // 音楽リストから次の楽曲リストを取得
+    function getNextMusicList() {
+        if (music_list.length > 0) {
+            return music_list.shift();
+        } else {
+            return [];
+        }
+    }
+
+    // 結果をHTML内の要素に表示
+    function updateResults() {
+
+        // temp0、temp1、concat_listがすべて空の場合、ボタンを非表示にする
+        if (temp0.length === 0 && temp1.length === 0 && concat_list.length === 0) {
+            document.getElementById('buttonContainer').style.display = 'none';
+            conclude_list = music_list.flat();
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('box').style.display = 'block';
+            all.style.display = "none";
+            lantah.style.display = "none";
+            sugiru.style.display = "none";
+            hacchi.style.display = "none";
+            shu3.style.display = "none";
+            hitsong.style.display = "none";
+        }
+    }
+
+    function startDiagnosis() {
+            // 質問フォームを表示
+            document.getElementById('selectcontainer').style.display = 'block';
+            
+            // ボタンを非表示
+            document.getElementById('start-button').style.display = 'none';
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('me').style.display = 'none';
+        }
+
+    function updateRankingTable() {
+        const rankingTable = document.getElementById("rankingBody");
+        rankingTable.innerHTML = ""; // Clear the existing table
+
+        for (let i = 0; i < conclude_list.length; i++) {
+            const row = document.createElement("tr");
+            const rankCell = document.createElement("td");
+            rankCell.textContent = i + 1; // Rank starts from 1
+            const musicCell = document.createElement("td");
+            musicCell.textContent = conclude_list[i];
+            row.appendChild(rankCell);
+            row.appendChild(musicCell);
+            rankingTable.appendChild(row);
+        }
+    }
+
+    // temp0のボタンがクリックされたときの処理
+    buttonTemp0.addEventListener("click", function() {
+        if (music_list.length > 0) {
+            concat_list.push(temp0[0]); // ボタンに書かれた楽曲をconcat_listに格納
+            temp0.shift(); // temp0から楽曲を取り出す
+            if (temp0.length > 0) {
+                buttonTemp0.textContent = temp0[0];
+                buttonTemp1.textContent = temp1[0];
+            } else if (temp1.length > 0) {
+                buttonTemp0.textContent = temp0[0];
+                buttonTemp1.textContent = temp1[0];
+            } 
+            if (temp0.length === 0) {
+                concat_list = concat_list.concat(temp1); // temp1の楽曲をconcat_listに追加
+                music_list = music_list.concat([concat_list]);
+                concat_list = []; // concat_listをリセット
+                temp0 = getNextMusicList();
+                temp1 = getNextMusicList();
+                if (temp0.length > 0) {
+                    buttonTemp0.textContent = temp0[0];
+                    buttonTemp1.textContent = temp1[0];
+                } else if (temp1.length > 0) {
+                    buttonTemp0.textContent = temp0[0];
+                    buttonTemp1.textContent = temp1[0];
+                } else {
+                    // 楽曲リストがなくなったら終了
+                    updateResults();
+                }
+            } else if (temp1.length === 0) {
+                concat_list = concat_list.concat(temp0); // temp0の楽曲をconcat_listに追加
+                music_list = music_list.concat([concat_list]);
+                concat_list = []; // concat_listをリセット
+                temp0 = getNextMusicList();
+                temp1 = getNextMusicList();
+                if (temp0.length > 0) {
+                    buttonTemp0.textContent = temp0[0];
+                    buttonTemp1.textContent = temp1[0];
+                } else if (temp1.length > 0) {
+                    buttonTemp0.textContent = temp0[0];
+                    buttonTemp1.textContent = temp1[0];
+                } else {
+                    // 楽曲リストがなくなったら終了
+                    updateResults();
+                    
+                    
+                }
+            }
+        } else if (music_list.length === 0) {
+            concat_list.push(temp0[0]); // ボタンに書かれた楽曲をconcat_listに格納
+            temp0.shift(); // temp0から楽曲を取り出す
+            if (temp0.length > 0) {
+                buttonTemp0.textContent = temp0[0];
+                buttonTemp1.textContent = temp1[0];
+            } else if (temp1.length > 0) {
+                buttonTemp0.textContent = temp0[0];
+                buttonTemp1.textContent = temp1[0];
+            } 
+            if (temp0.length === 0) {
+                concat_list = concat_list.concat(temp1); // temp1の楽曲をconcat_listに追加
+                music_list = music_list.concat([concat_list]);
+                concat_list = []; // concat_listをリセット
+                temp0 = [];
+                temp1 = [];
+                updateResults();
+                updateRankingTable();
+            } else if (temp1.length === 0) {
+                concat_list = concat_list.concat(temp0); // temp0の楽曲をconcat_listに追加
+                music_list = music_list.concat([concat_list]);
+                concat_list = []; // concat_listをリセット
+                temp0 = [];
+                temp1 = [];
+                updateResults();
+                updateRankingTable();
+            }
+        }
+        updateResults(); // 結果を更新
+    });
+
+    // temp1のボタンがクリックされたときの処理
+    buttonTemp1.addEventListener("click", function() {
+        if (music_list.length > 0) {
+            concat_list.push(temp1[0]); // ボタンに書かれた楽曲をconcat_listに格納
+            temp1.shift(); // temp1から楽曲を取り出す
+            if (temp0.length > 0) {
+                buttonTemp0.textContent = temp0[0];
+                buttonTemp1.textContent = temp1[0];
+            } else if (temp1.length > 0) {
+                buttonTemp0.textContent = temp0[0];
+                buttonTemp1.textContent = temp1[0];
+            } 
+            if (temp0.length === 0) {
+                concat_list = concat_list.concat(temp1); // temp1の楽曲をconcat_listに追加
+                music_list = music_list.concat([concat_list]);
+                concat_list = []; // concat_listをリセット
+                temp0 = getNextMusicList();
+                temp1 = getNextMusicList();
+                if (temp0.length > 0) {
+                    buttonTemp0.textContent = temp0[0];
+                    buttonTemp1.textContent = temp1[0];
+                } else if (temp1.length > 0) {
+                    buttonTemp0.textContent = temp0[0];
+                    buttonTemp1.textContent = temp1[0];
+                } else {
+                    // 楽曲リストがなくなったら終了
+                    updateResults();
+                }
+            } else if (temp1.length === 0) {
+                concat_list = concat_list.concat(temp0); // temp0の楽曲をconcat_listに追加
+                music_list = music_list.concat([concat_list]);
+                concat_list = []; // concat_listをリセット
+                temp0 = getNextMusicList();
+                temp1 = getNextMusicList();
+                if (temp0.length > 0) {
+                    buttonTemp0.textContent = temp0[0];
+                    buttonTemp1.textContent = temp1[0];
+                } else if (temp1.length > 0) {
+                    buttonTemp0.textContent = temp0[0];
+                    buttonTemp1.textContent = temp1[0];
+                } else {
+                    // 楽曲リストがなくなったら終了
+                    updateResults();
+                }
+            }
+        } else if (music_list.length === 0) {
+            concat_list.push(temp1[0]); // ボタンに書かれた楽曲をconcat_listに格納
+            temp1.shift(); // temp0から楽曲を取り出す
+            if (temp0.length > 0) {
+                buttonTemp0.textContent = temp0[0];
+                buttonTemp1.textContent = temp1[0];
+            } else if (temp1.length > 0) {
+                buttonTemp0.textContent = temp0[0];
+                buttonTemp1.textContent = temp1[0];
+            } 
+            if (temp0.length === 0) {
+                concat_list = concat_list.concat(temp1); // temp1の楽曲をconcat_listに追加
+                music_list = music_list.concat([concat_list]);
+                concat_list = []; // concat_listをリセット
+                temp0 = [];
+                temp1 = [];
+                updateResults();
+                updateRankingTable();
+            } else if (temp1.length === 0) {
+                concat_list = concat_list.concat(temp0); // temp0の楽曲をconcat_listに追加
+                music_list = music_list.concat([concat_list]);
+                concat_list = []; // concat_listをリセット
+                temp0 = [];
+                temp1 = [];
+                updateResults();
+                updateRankingTable();
+            }
+        }
+
+        updateResults(); // 結果を更新
+    });
+
+    document.getElementById('twitter-share-button').addEventListener('click', function () {
+        // 1位、2位、3位の楽曲名を取得
+        var rankingTable = document.getElementById("rankingTable");
+        var rows = rankingTable.getElementsByTagName("tr");
+        var firstPlace = rows[1].getElementsByTagName("td")[1].textContent; // 1位の楽曲名
+        var secondPlace = rows[2].getElementsByTagName("td")[1].textContent; // 2位の楽曲名
+        var thirdPlace = rows[3].getElementsByTagName("td")[1].textContent; // 3位の楽曲名
+
+        const tweetText = `ナポリの男たち楽曲ランキングは\n第1位:：${firstPlace}\n第2位：${secondPlace}\n第3位：${thirdPlace}\n`;
+
+        const encodedTweetText = encodeURIComponent(tweetText);
+        const encodedURL = encodeURIComponent('https://btcksho8.github.io/musicranking_npl/');
+        const hashtags = 'nplmusic_sort';
+
+        const twitterShareURL = `https://twitter.com/intent/tweet?text=${encodedTweetText}&url=${encodedURL}&hashtags=${hashtags}`;
+
+        window.open(twitterShareURL, '_blank');
+        });
+
+        // 〇〇-button要素を取得
+        var allButton = document.getElementById("all-button");
+        var lantahButton = document.getElementById("lantah-button");
+        var sugiruButton = document.getElementById("sugiru-button");
+        var hacchiButton = document.getElementById("hacchi-button");
+        var shu3Button = document.getElementById("shu3-button");
+        var hitsongButton = document.getElementById("hitsong-button");
+
+        // 〇〇要素を取得
+        var all = document.getElementById("all");
+        var lantah = document.getElementById("lantah");
+        var sugiru = document.getElementById("sugiru");
+        var hacchi = document.getElementById("hacchi");
+        var shu3 = document.getElementById("shu3");
+        var hitsong = document.getElementById("hitsong");
+
+        // 〇〇Buttonがクリックされたときの処理
+        allButton.addEventListener("click", function() {
+            // 他の画像を非表示にする
+            lantah.style.display = "none";
+            sugiru.style.display = "none";
+            hacchi.style.display = "none";
+            shu3.style.display = "none";
+            hitsong.style.display = "none";
+            // image-containerを表示
+            all.style.display = "block";
+        });
+        lantahButton.addEventListener("click", function() {
+            // 他の画像を非表示にする
+            all.style.display = "none";
+            sugiru.style.display = "none";
+            hacchi.style.display = "none";
+            shu3.style.display = "none";
+            hitsong.style.display = "none";
+            // image-containerを表示
+            lantah.style.display = "block";
+        });
+        sugiruButton.addEventListener("click", function() {
+            // 他の画像を非表示にする
+            all.style.display = "none";
+            lantah.style.display = "none";
+            hacchi.style.display = "none";
+            shu3.style.display = "none";
+            hitsong.style.display = "none";
+            // image-containerを表示
+            sugiru.style.display = "block";
+        });
+        hacchiButton.addEventListener("click", function() {
+            // 他の画像を非表示にする
+            all.style.display = "none";
+            lantah.style.display = "none";
+            sugiru.style.display = "none";
+            shu3.style.display = "none";
+            hitsong.style.display = "none";
+            // image-containerを表示
+            hacchi.style.display = "block";
+        });
+        shu3Button.addEventListener("click", function() {
+            // 他の画像を非表示にする
+            all.style.display = "none";
+            lantah.style.display = "none";
+            sugiru.style.display = "none";
+            hacchi.style.display = "none";
+            hitsong.style.display = "none";
+            // image-containerを表示
+            shu3.style.display = "block";
+        });
+        hitsongButton.addEventListener("click", function() {
+            // 他の画像を非表示にする
+            all.style.display = "none";
+            lantah.style.display = "none";
+            sugiru.style.display = "none";
+            hacchi.style.display = "none";
+            shu3.style.display = "none";
+            // image-containerを表示
+            hitsong.style.display = "block";
+        });
+
+</script>
+</body>
+</html>
